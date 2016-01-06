@@ -144,9 +144,9 @@ public class SelectedImage extends AppCompatActivity {
 
             case R.id.action_share:
                 String shareBody = selectedImageDescription;
-                String ShareSubject = "My Trip";
+                String shareSubject = "My Trip";
 
-                onShareClick();
+                ShareMyTrip(shareBody, shareSubject, Uri.fromFile(mLoadedFile));
 
                 return true;
 
@@ -268,8 +268,8 @@ public class SelectedImage extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
 
-        //  TODO: This bit is not necessary since onActivityResult(...) in MainActivity
-        //  TODO: MainActivity intercepts this regardless and loads the GalleryFragment again
+        //  This bit is not necessary since onActivityResult(...) in MainActivity
+        //  MainActivity intercepts this regardless and loads the GalleryFragment again
         //  TODO: Keep it for now as it can be handy
         intent.putExtra("ImageCaption", selectedImageDescription);
         setResult(RESULT_OK, intent);
@@ -278,13 +278,15 @@ public class SelectedImage extends AppCompatActivity {
     }
 
     /**
-     * This method shares text or images via the user's sharing apps
-     *
-     * @param type    Define the type of what is being shared: Text or Images
-     * @param body    Description of what is being shared
-     * @param subject Subject of what is being shared
+     * This method creates the sharing intent based on the sharing type
+     * @param type      Sharing type
+     * @param body      Message body
+     * @param subject   Message subject
+     * @param uri       Message Uri (Image) if any
+     * @return          An intent with all the corresponding extras
      */
-    private void Share(ShareType type, String body, String subject, Uri uri) {
+    private Intent SharingIntent(ShareType type, String body, String subject, Uri uri) {
+
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 
         switch (type) {
@@ -308,40 +310,40 @@ public class SelectedImage extends AppCompatActivity {
 
             case MESSAGE_RFC822:
                 sharingIntent.setType("message/rfc822");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);  //  Share subject
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);        //  Share text body
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);                       //  Share image
         }
 
-        //  Start share activity
-//        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        return sharingIntent;
     }
 
 
+    /**
+     * This method handles all the sharing intents and packages them before sending
+     * depending on the apps available on the user's device
+     * @param messageBody       The message body
+     * @param messageSubject    The message subject
+     * @param ImageFileUri      The file uri
+     */
+    public void ShareMyTrip(String messageBody, String messageSubject, Uri ImageFileUri) {
 
-    public void onShareClick() {
+        Intent emailIntent = SharingIntent(ShareType.MESSAGE_RFC822, messageBody, messageSubject, ImageFileUri);
 
-        Intent emailIntent = new Intent();
-        emailIntent.setAction(Intent.ACTION_SEND);
-        // Native email client doesn't currently support HTML, but it doesn't hurt to try in case they fix it
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Email Body");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email Subject");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mLoadedFile));
-        emailIntent.setType("message/rfc822");
+        PackageManager packageManager = getPackageManager();
 
-        PackageManager pm = getPackageManager();
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.setType("text/plain");
-
+        Intent sendIntent = SharingIntent(ShareType.TEXT, "", "", null);
 
         Intent openInChooser = Intent.createChooser(emailIntent, "Share via");
 
-        List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
+        List<ResolveInfo> resInfoList = packageManager.queryIntentActivities(sendIntent, 0);
         List<LabeledIntent> intentList = new ArrayList<>();
 
-        for (int i = 0; i < resInfo.size(); i++)
+        for (int i = 0; i < resInfoList.size(); i++)
         {
             // Extract the label, append it, and repackage it in a LabeledIntent
-            ResolveInfo ri = resInfo.get(i);
-            String packageName = ri.activityInfo.packageName;
-
+            ResolveInfo resInfo = resInfoList.get(i);
+            String packageName = resInfo.activityInfo.packageName;
 
             if(packageName.contains(ShareApps.ANDROID_EMAIL.toString()))
             {
@@ -351,128 +353,43 @@ public class SelectedImage extends AppCompatActivity {
                     || packageName.contains(ShareApps.MMS.toString()) || packageName.contains(ShareApps.WHATSAPP.toString()))
             {
                 Intent intent = new Intent();
-                intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
-                intent.setAction(Intent.ACTION_SEND);
 
-
-                if(packageName.contains(ShareApps.TWITTER.toString()))
+                if (packageName.contains(ShareApps.MMS.toString()))
                 {
-                    intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_TEXT, "Twitter Text");
+                    intent = SharingIntent(ShareType.TEXT, messageBody, messageSubject, null);
                 }
-                else if(packageName.contains(ShareApps.FACEBOOK.toString()))
+                else if (packageName.contains(ShareApps.TWITTER.toString()))
                 {
-                    // Warning: Facebook IGNORES our text. They say "These fields are intended for users to express themselves.
-                    // Pre-filling these fields erodes the authenticity of the user voice."
-                    // One workaround is to use the Facebook SDK to post, but that doesn't allow the user to choose how
-                    // they want to share. We can also make a custom landing page, and the link
-                    // will show the <meta content ="..."> text from that page with our link in Facebook.
-
-                    intent.setType("image/jpeg");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mLoadedFile));                       //  Share image
+                    intent = SharingIntent(ShareType.TEXT, messageBody, messageSubject, null);
                 }
-                else if(packageName.contains(ShareApps.WHATSAPP.toString()))
+                else if (packageName.contains(ShareApps.FACEBOOK.toString()))
                 {
-                    intent.setType("*/*");
-                    intent.putExtra(Intent.EXTRA_TEXT, "Whatsapp Text");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mLoadedFile));                       //  Share image
+                    //  Facebook does not allow both Text and Image yet so we only send an image
+                    //  We may need to access the Facebook SDK but it does not allow user to choose how to share
+                    intent = SharingIntent(ShareType.IMAGE, "", "", Uri.fromFile(mLoadedFile));
                 }
-                else if(packageName.contains(ShareApps.MMS.toString()))
+                else if (packageName.contains(ShareApps.WHATSAPP.toString()))
                 {
-                    intent.setType("text/plain");
-                    intent.putExtra(Intent.EXTRA_TEXT, "MMS Text");
+                    intent = SharingIntent(ShareType.TEXT_AND_IMAGE, messageBody, messageSubject, Uri.fromFile(mLoadedFile));
                 }
 
-                intentList.add(new LabeledIntent(intent, packageName, ri.loadLabel(pm), ri.icon));
+                //  set the sharing component icon onto the list
+                intent.setComponent(new ComponentName(packageName, resInfo.activityInfo.name));
+
+                intentList.add(new LabeledIntent(intent, packageName, resInfo.loadLabel(packageManager), resInfo.icon));
             }
         }
 
         // convert intentList to array
         LabeledIntent[] extraIntents = intentList.toArray( new LabeledIntent[ intentList.size() ]);
 
+        //  Attach the extra intents to original openInChooser intent
         openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
+
+        //  Start the activity
         startActivity(openInChooser);
     }
 
-//    public void onShareClick() {
-//        Resources resources = getResources();
-//
-//        Intent emailIntent = new Intent();
-//        emailIntent.setAction(Intent.ACTION_SEND);
-//        // Native email client doesn't currently support HTML, but it doesn't hurt to try in case they fix it
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(resources.getString(R.string.app_name)));
-//        emailIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.app_name));
-//        emailIntent.setType("message/rfc822");
-//
-//        PackageManager pm = getPackageManager();
-//        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-//        sendIntent.setType("text/plain");
-//
-//
-//        Intent openInChooser = Intent.createChooser(emailIntent, resources.getString(R.string.app_name));
-//
-//        List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
-//        List<LabeledIntent> intentList = new ArrayList<>();
-//        for (int i = 0; i < resInfo.size(); i++)
-//        {
-//            // Extract the label, append it, and repackage it in a LabeledIntent
-//            ResolveInfo ri = resInfo.get(i);
-//            String packageName = ri.activityInfo.packageName;
-//
-//            if(packageName.contains("android.email"))
-//            {
-//                emailIntent.setPackage(packageName);
-//            }
-//            else if(packageName.contains("twitter") || packageName.contains("facebook")
-//                    || packageName.contains("mms") || packageName.contains("android.gm")
-//                    || packageName.contains("whatsapp"))
-//            {
-//                Intent intent = new Intent();
-//                intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
-//                intent.setAction(Intent.ACTION_SEND);
-//                intent.setType("text/plain");
-//
-//                if(packageName.contains("twitter"))
-//                {
-//                    intent.putExtra(Intent.EXTRA_TEXT, resources.getString(R.string.app_name));
-//                }
-//                else if(packageName.contains("facebook") || packageName.contains("whatsapp"))
-//                {
-//                    // Warning: Facebook IGNORES our text. They say "These fields are intended for users to express themselves. Pre-filling these fields erodes the authenticity of the user voice."
-//                    // One workaround is to use the Facebook SDK to post, but that doesn't allow the user to choose how they want to share. We can also make a custom landing page, and the link
-//                    // will show the <meta content ="..."> text from that page with our link in Facebook.
-////                    intent.putExtra(Intent.EXTRA_TEXT, resources.getString(R.string.app_name));
-//                    intent.setType("image/jpeg");
-//
-//
-////                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);  //  Share subject
-////                    intent.putExtra(android.content.Intent.EXTRA_TEXT, "some text");        //  Share text body
-//                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mLoadedFile));                       //  Share image
-//
-//
-//
-//                }
-//                else if(packageName.contains("mms"))
-//                {
-//                    intent.putExtra(Intent.EXTRA_TEXT, resources.getString(R.string.app_name));
-//                }
-//                else if(packageName.contains("android.gm"))
-//                { // If Gmail shows up twice, try removing this else-if clause and the reference to "android.gm" above
-//                    intent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(resources.getString(R.string.app_name)));
-//                    intent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.app_name));
-//                    intent.setType("message/rfc822");
-//                }
-//
-//                intentList.add(new LabeledIntent(intent, packageName, ri.loadLabel(pm), ri.icon));
-//            }
-//        }
-//
-//        // convert intentList to array
-//        LabeledIntent[] extraIntents = intentList.toArray( new LabeledIntent[ intentList.size() ]);
-//
-//        openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
-//        startActivity(openInChooser);
-//    }
 
     public enum ShareApps {
         MMS ("mms"),
