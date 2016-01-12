@@ -123,6 +123,8 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.ViewHold
         super.onAttachedToRecyclerView(recyclerView);
     }
 }
+
+
 //public class MyTripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //
 //    private final String JPG_exifTag_imageDescription = "UserComment";

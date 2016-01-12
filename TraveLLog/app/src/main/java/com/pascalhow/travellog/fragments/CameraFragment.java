@@ -43,7 +43,7 @@ import android.widget.Toast;
 
 import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.R;
-import com.pascalhow.travellog.model.BitmapItem;
+import com.pascalhow.travellog.utils.ImageHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -295,8 +295,7 @@ public class CameraFragment extends Fragment {
                 File file = new File(pictureFilePath);
 
                 //  We need to get the bitmap from the actual directory otherwise "data" will return a small thumbnail
-                BitmapItem bitmapItem = new BitmapItem(file.getAbsolutePath(), bitmapWidth, bitmapHeight);
-                Bitmap bitmap = bitmapItem.getBitmap();
+                Bitmap bitmap = ImageHelper.decodeSampledBitmapFromFile(file.getAbsolutePath(), bitmapWidth, bitmapHeight);
 
                 //  Update the ImageView with the bitmap
                 imageView_cameraPicture.setImageBitmap(bitmap);

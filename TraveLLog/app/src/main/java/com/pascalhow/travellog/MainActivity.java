@@ -17,15 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.pascalhow.travellog.fragments.AboutMeFragment;
 import com.pascalhow.travellog.fragments.CameraFragment;
 import com.pascalhow.travellog.fragments.ImportFragment;
 import com.pascalhow.travellog.fragments.MyTripsFragment;
-import com.pascalhow.travellog.fragments.SettingsFragment;
-import com.pascalhow.travellog.fragments.ShareFragment;
-import com.pascalhow.travellog.fragments.SlideShowFragment;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,10 +31,6 @@ public class MainActivity extends AppCompatActivity
     private static final String FRAGMENT_CAMERA = "camera";
     private static final String FRAGMENT_MYTRIPS = "mytrips";
     private static final String FRAGMENT_IMPORT = "import";
-    private static final String FRAGMENT_SLIDESHOW = "slideshow";
-    private static final String FRAGMENT_SETTINGS = "settings";
-    private static final String FRAGMENT_SHARE = "share";
-    private static final String FRAGMENT_ABOUT = "about";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,31 +60,6 @@ public class MainActivity extends AppCompatActivity
         //  Load the camera fragment for starters
         loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
     }
-
-
-//    /**
-//     * This method creates the email intent
-//     * @param recipient email address of the recipient
-//     * @param subject is the email subject
-//     * @param message is the body of the email
-//     */
-//    private void sendEmail(String[] recipient, String subject, String message)
-//    {
-//        // Use an intent to launch an email app.
-//        // Send the order summary in the email body.
-//        Intent intent = new Intent(Intent.ACTION_SENDTO);
-//        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-//
-//        //  Parse all the email information
-//        intent.putExtra(Intent.EXTRA_EMAIL, recipient);
-//        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-//        intent.putExtra(Intent.EXTRA_TEXT, message);
-//
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            //  Start the email activity
-//            startActivity(intent);
-//        }
-//    }
 
     private void loadFragment(Fragment fragment, String tag) {
 
@@ -130,15 +96,6 @@ public class MainActivity extends AppCompatActivity
 
         switch(id)
         {
-            case R.id.action_about:
-                loadFragment(new AboutMeFragment(), FRAGMENT_ABOUT);
-                return true;
-
-            case R.id.action_settings:
-                //  Load standard android settings page
-                startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -161,17 +118,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_import:
                 loadFragment(new ImportFragment(), FRAGMENT_IMPORT);
                 break;
-            case R.id.nav_slideshow:
-                loadFragment(new SlideShowFragment(), FRAGMENT_SLIDESHOW);
-                break;
-            case R.id.nav_settings:
-                loadFragment(new SettingsFragment(), FRAGMENT_SETTINGS);
-                break;
-
-            //  These are under the Communicate group
-            case R.id.nav_share:
-                loadFragment(new ShareFragment(), FRAGMENT_SHARE);
-                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -192,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 //                fab.setVisibility(View.VISIBLE);
 
                 //  Load MyTripsFragment again to update the image description in the CardView items
-                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+//                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
     }

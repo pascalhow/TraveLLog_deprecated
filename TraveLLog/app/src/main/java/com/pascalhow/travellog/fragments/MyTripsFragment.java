@@ -15,6 +15,7 @@
  */
 package com.pascalhow.travellog.fragments;
 
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.pascalhow.travellog.EndlessRecyclerOnScrollListener;
 import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.MyTripsAdapter;
 import com.pascalhow.travellog.R;
@@ -43,8 +46,6 @@ public class MyTripsFragment extends Fragment {
     @Bind(R.id.myTrips_list)
     RecyclerView recyclerView;
 
-    @Bind(R.id.textView_myTrips)
-    TextView textView_myTrips;
 
     @Bind(R.id.imageView_myTrips_placeHolder)
     ImageView imageView_myTrips;
@@ -78,6 +79,8 @@ public class MyTripsFragment extends Fragment {
 
         mAdapter = new MyTripsAdapter(getContext());
 
+//        mAdapter = new MyTripsAdapter(getContext(), imagesList);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -85,7 +88,6 @@ public class MyTripsFragment extends Fragment {
         //  Remove placeholder image and text if images from folder are loaded successfully
         if(loadImages())
         {
-            textView_myTrips.setVisibility(View.INVISIBLE);
             imageView_myTrips.setVisibility(View.INVISIBLE);
         }
 
@@ -110,17 +112,24 @@ public class MyTripsFragment extends Fragment {
         File folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName);
 
         if (folderPath.exists()) {
-            for (int i = 0; i < folderPath.listFiles().length; i++)
-            {
-                //  Load all the images in the folder into the images list
-                images.add(
-                        new MyTripsItemBuilder()
-                                .setTitle("Image " + i)
-                                .setUrl(folderPath.listFiles()[i].getAbsolutePath())
-                                .build()
-                );
 
-                imageLoaded = true;
+            //  Do a try for now as user may not have allowed for permission to access external storage
+            try {
+                for (int i = 0; i < folderPath.listFiles().length; i++) {
+                    //  Load all the images in the folder into the images list
+                    images.add(
+                            new MyTripsItemBuilder()
+                                    .setTitle("Image " + i)
+                                    .setUrl(folderPath.listFiles()[i].getAbsolutePath())
+                                    .build()
+                    );
+
+                    imageLoaded = true;
+                }
+            }
+            catch(Exception ex)
+            {
+                Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
             }
         }
         mAdapter.setItemList(images);
@@ -187,4 +196,12 @@ public class MyTripsFragment extends Fragment {
 //        @Override
 //        protected void onProgressUpdate(Void... values) {}
 //    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        loadImages();
+    }
 }

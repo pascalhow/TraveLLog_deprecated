@@ -11,6 +11,11 @@
     <item android:id="@+id/action_share"
         android:title="@string/toolbar_share_selected_image"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_toolbar_send"
+        android:icon="@drawable/ic_toolbar_share"
         app:showAsAction="always" />
+
+    <item android:id="@+id/action_delete"
+        android:title="@string/toolbar_delete_selected_image"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

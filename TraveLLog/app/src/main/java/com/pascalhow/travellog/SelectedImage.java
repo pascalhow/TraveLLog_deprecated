@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pascalhow.travellog.utils.ImageHelper;
 
@@ -150,6 +151,15 @@ public class SelectedImage extends AppCompatActivity {
 
                 return true;
 
+            case R.id.action_delete:
+
+                //  Delete the file
+                mLoadedFile.delete();
+
+                Toast.makeText(this, "File: " + mLoadedFile.getAbsolutePath() + " deleted", Toast.LENGTH_SHORT).show();
+
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

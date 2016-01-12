@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pascalhow.travellog.EndlessRecyclerOnScrollListener;
 import com.pascalhow.travellog.ImportAdapter;
@@ -108,21 +109,26 @@ public class ImportFragment extends Fragment {
 
         if (folderPath.exists())
         {
-            for (int i = count; i <loadLimit; i++)
-            {
-                if(i < folderPath.listFiles().length) {
-                    //  Load the images in the folder into the images list
-                    imagesList.add(
-                            new MyTripsItemBuilder()
-                                    .setUrl(folderPath.listFiles()[i].getAbsolutePath())
-                                    .build()
-                    );
+            try {
+                for (int i = count; i < loadLimit; i++) {
+                    if (i < folderPath.listFiles().length) {
+                        //  Load the images in the folder into the images list
+                        imagesList.add(
+                                new MyTripsItemBuilder()
+                                        .setUrl(folderPath.listFiles()[i].getAbsolutePath())
+                                        .build()
+                        );
 
-                    mAdapter.notifyItemInserted(imagesList.size());
+                        mAdapter.notifyItemInserted(imagesList.size());
 
+                    }
+                    imageLoaded = true;
+                    count++;
                 }
-                imageLoaded = true;
-                count++;
+            }
+            catch(Exception ex)
+            {
+                Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
             }
 
             //  Go to next set of images

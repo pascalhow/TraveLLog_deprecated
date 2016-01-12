@@ -31,7 +31,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserSettings" />
         <activity
             android:name=".SelectedImage"
             android:label="@string/title_activity_selected_image"
