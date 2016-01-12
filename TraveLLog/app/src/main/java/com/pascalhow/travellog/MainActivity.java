@@ -3,10 +3,12 @@ package com.pascalhow.travellog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,17 +17,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.pascalhow.travellog.fragments.AboutMeFragment;
 import com.pascalhow.travellog.fragments.CameraFragment;
-import com.pascalhow.travellog.fragments.GalleryFragment;
+import com.pascalhow.travellog.fragments.ImportFragment;
+import com.pascalhow.travellog.fragments.MyTripsFragment;
 import com.pascalhow.travellog.fragments.SettingsFragment;
 import com.pascalhow.travellog.fragments.ShareFragment;
 import com.pascalhow.travellog.fragments.SlideShowFragment;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public FloatingActionButton fab;
+
+    private static final String FRAGMENT_CAMERA = "camera";
+    private static final String FRAGMENT_MYTRIPS = "mytrips";
+    private static final String FRAGMENT_IMPORT = "import";
+    private static final String FRAGMENT_SLIDESHOW = "slideshow";
+    private static final String FRAGMENT_SETTINGS = "settings";
+    private static final String FRAGMENT_SHARE = "share";
+    private static final String FRAGMENT_ABOUT = "about";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +48,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                String[] recipient = {"YourEmail@hotmail.com"};
-//                String subject = "Hello World!";
-//                String message = "Greetings from my Android device";
-//
-//                //  Finally send the email to the customer
-//                sendEmail(recipient, subject, message);
 //            }
 //        });
 
@@ -58,8 +67,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //  Load the camera fragment for starters
-        loadFragment(new CameraFragment());
+        loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
     }
+
 
 //    /**
 //     * This method creates the email intent
@@ -85,11 +95,12 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment, String tag) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.main_content, fragment)
+                .replace(R.id.main_content, fragment, tag)
+//                .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
 
@@ -120,7 +131,7 @@ public class MainActivity extends AppCompatActivity
         switch(id)
         {
             case R.id.action_about:
-                loadFragment(new AboutMeFragment());
+                loadFragment(new AboutMeFragment(), FRAGMENT_ABOUT);
                 return true;
 
             case R.id.action_settings:
@@ -142,21 +153,24 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             //  These are under the Single group
             case R.id.nav_camera:
-                loadFragment(new CameraFragment());
+                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
                 break;
-            case R.id.nav_gallery:
-                loadFragment(new GalleryFragment());
+            case R.id.nav_mytrips:
+                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+                break;
+            case R.id.nav_import:
+                loadFragment(new ImportFragment(), FRAGMENT_IMPORT);
                 break;
             case R.id.nav_slideshow:
-                loadFragment(new SlideShowFragment());
+                loadFragment(new SlideShowFragment(), FRAGMENT_SLIDESHOW);
                 break;
             case R.id.nav_settings:
-                loadFragment(new SettingsFragment());
+                loadFragment(new SettingsFragment(), FRAGMENT_SETTINGS);
                 break;
 
             //  These are under the Communicate group
             case R.id.nav_share:
-                loadFragment(new ShareFragment());
+                loadFragment(new ShareFragment(), FRAGMENT_SHARE);
                 break;
         }
 
@@ -175,8 +189,10 @@ public class MainActivity extends AppCompatActivity
 //                String s = data.getStringExtra("ImageCaption");
 //                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 
-                //  Load GalleryFragment again to update the image description in the CardView items
-                loadFragment(new GalleryFragment());
+//                fab.setVisibility(View.VISIBLE);
+
+                //  Load MyTripsFragment again to update the image description in the CardView items
+                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
     }

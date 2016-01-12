@@ -5,18 +5,22 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="@string/menu_camera_title" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_mytrips"
+            android:icon="@drawable/ic_menu_mytrips"
+            android:title="@string/menu_myTrips_title" />
+        <item
+            android:id="@+id/nav_import"
+            android:icon="@drawable/ic_menu_import"
+            android:title="@string/menu_import_title" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="@string/menu_slideshow_title" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_settings"
             android:title="@string/menu_settings_title" />
     </group>
 
@@ -25,7 +29,7 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/menu_share_title" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"

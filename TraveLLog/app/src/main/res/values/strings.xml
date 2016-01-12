@@ -22,8 +22,11 @@
     <string name="camera_image_description_save_button_text">Save</string>
     <string name="camera_image_description_cancel_button_text">Cancel</string>
 
-    <string name="gallery_fragment_title">Gallery Fragment!</string>
-    <string name="menu_gallery_title">Gallery</string>
+    <string name="myTrips_fragment_title">MyTrips Fragment!</string>
+    <string name="menu_myTrips_title">MyTrips</string>
+
+    <string name="import_fragment_title">Import Fragment!</string>
+    <string name="menu_import_title">Import</string>
 
     <string name="slideshow_fragment_title">Slideshow fragment!</string>
     <string name="menu_slideshow_title">Slideshow</string>
@@ -47,6 +50,7 @@
 
     <string name="share_fragment_title">Select images to share!</string>
     <string name="menu_share_title">Share</string>
+
     <string name="title_activity_selected_image">Selected Image</string>
     <string name="toolbar_edit_selected_image">Edit</string>
     <string name="toolbar_share_selected_image">Share</string>

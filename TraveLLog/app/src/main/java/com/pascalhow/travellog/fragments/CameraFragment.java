@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -40,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.model.BitmapItem;
 
@@ -64,9 +66,6 @@ public class CameraFragment extends Fragment {
     @Bind(R.id.imageView_camera)
     ImageView imageView_cameraPicture;
 
-    @Bind(R.id.cameraButton)
-    Button button_camera;
-
     @Bind(R.id.textView_caption_label)
     TextView textView_captionLabel;
 
@@ -90,7 +89,7 @@ public class CameraFragment extends Fragment {
     private int bitmapHeight = 700;
 
     private String ImageFolderName = "TraveLLog";
-
+    MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,6 +97,9 @@ public class CameraFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
         ButterKnife.bind(this, view);
+
+        mainActivity = (MainActivity) getActivity();
+        mainActivity.fab.setVisibility(View.VISIBLE);
 
         //  Get the user to give necessary access to the camera
         getAppPermissions();
@@ -110,10 +112,18 @@ public class CameraFragment extends Fragment {
         return view;
     }
 
+
     /**
      * This method loads the CameraFragment save, cancel and edit buttons
      */
     private void LoadButtons() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mainActivity.fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_white, mainActivity.getApplicationContext().getTheme()));
+        } else {
+            mainActivity.fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_white));
+        }
+
         button_saveImageDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +138,7 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description visible
                 button_editText.setVisibility(View.VISIBLE);
                 textView_imageDescription.setVisibility(View.VISIBLE);
+                mainActivity.fab.setVisibility(View.VISIBLE);
 
                 //  Save the text from Edit Text field onto the Text View
                 textView_imageDescription.setText(editText_imageDescription.getText().toString());
@@ -151,6 +162,7 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description visible
                 button_editText.setVisibility(View.VISIBLE);
                 textView_imageDescription.setVisibility(View.VISIBLE);
+                mainActivity.fab.setVisibility(View.VISIBLE);
             }
         });
 
@@ -173,6 +185,7 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description gone
                 button_editText.setVisibility(View.GONE);
                 textView_imageDescription.setVisibility(View.GONE);
+                mainActivity.fab.setVisibility(View.GONE);
             }
         });
     }
@@ -301,6 +314,8 @@ public class CameraFragment extends Fragment {
                 button_saveImageDescription.setVisibility(View.VISIBLE);    //  Save button
                 button_cancelImageDescription.setVisibility(View.VISIBLE);  //  Cancel button
 
+                mainActivity.fab.setVisibility(View.GONE);
+
                 //  Give focus to the edit text view
                 editText_imageDescription.requestFocus();
 
@@ -329,10 +344,9 @@ public class CameraFragment extends Fragment {
         }
 
         //  If app already has all necessary permissions then carry on
-        button_camera.setOnClickListener(new View.OnClickListener() {
+        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View view) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
                 //  This line below launches the google camera
@@ -392,7 +406,7 @@ public class CameraFragment extends Fragment {
                         && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                     // All Permissions Granted so set the camera button onClickListener
-                    button_camera.setOnClickListener(new View.OnClickListener() {
+                    mainActivity.fab.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View v) {
 
@@ -425,5 +439,25 @@ public class CameraFragment extends Fragment {
 
     public enum ImageCaptionType {
         IMAGE_DESCRIPTION, LOCATION, PEOPLE
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible)
+    {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed())
+        {
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (!getUserVisibleHint())
+        {
+            return;
+        }
     }
 }

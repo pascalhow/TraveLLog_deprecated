@@ -1,26 +1,26 @@
 package com.pascalhow.travellog.model;
 
-public class GalleryItemBuilder {
+public class MyTripsItemBuilder {
     private String title;
     private String imagePath;
     private String imageDescription;
 
-    public GalleryItemBuilder setTitle(String title) {
+    public MyTripsItemBuilder setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public GalleryItemBuilder setUrl(String imagePath) {
+    public MyTripsItemBuilder setUrl(String imagePath) {
         this.imagePath = imagePath;
         return this;
     }
 
-    public GalleryItemBuilder setImageDescription(String description) {
+    public MyTripsItemBuilder setImageDescription(String description) {
         this.imageDescription = description;
         return this;
     }
 
-    public GalleryItem build() {
-        return new GalleryItem(title, imagePath);
+    public MyTripsItem build() {
+        return new MyTripsItem(title, imagePath);
     }
 }

@@ -159,9 +159,9 @@ public class ShareFragment extends ListFragment {
         @Override
         public View getView(int index, View view, ViewGroup parent) {
             if (view == null) {
-                //  Inflate our ListView with gallery_adapter_item
+                //  Inflate our ListView with mytrips_adapter_item
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.gallery_adapter_item, null);
+                view = inflater.inflate(R.layout.mytrips_adapter_item, null);
             }
 
             Bitmap bitmap = m_bitmapItemList.get(index).getBitmap();

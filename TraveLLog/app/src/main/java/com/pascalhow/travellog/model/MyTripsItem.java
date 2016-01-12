@@ -15,12 +15,13 @@
  */
 package com.pascalhow.travellog.model;
 
-public class GalleryItem {
+public class MyTripsItem {
     private String title;
     private String imagePath;
     private String imageDescription;
+    private String date;
 
-    GalleryItem(String title, String imagePath) {
+    MyTripsItem(String title, String imagePath) {
         this.title = title;
         this.imagePath = imagePath;
     }
@@ -44,4 +45,14 @@ public class GalleryItem {
     public String getImageDescription() { return this.imageDescription; }
 
     public void setImageDescription(String description){this.imageDescription = description; }
+
+    public void setDate(String date)
+    {
+        this.date = date;
+    }
+
+    public String getDate()
+    {
+        return this.date;
+    }
 }

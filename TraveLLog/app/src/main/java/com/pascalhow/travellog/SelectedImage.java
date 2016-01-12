@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -26,9 +27,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pascalhow.travellog.utils.BitmapHelper;
+import com.pascalhow.travellog.utils.ImageHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,8 +72,8 @@ public class SelectedImage extends AppCompatActivity {
 //        });
 
         mLoadedFile = LoadImageContents();
-        BitmapHelper bitmapHelper = new BitmapHelper(width, height);
-        Bitmap bitmap = bitmapHelper.decodeSampledBitmapFromFile(mLoadedFile.getAbsolutePath());
+
+        Bitmap bitmap = ImageHelper.decodeSampledBitmapFromFile(mLoadedFile.getAbsolutePath(), width, height);
 
         imageView_selectedImage = (ImageView) findViewById(R.id.imageView_selectedImage);
         imageView_selectedImage.setImageBitmap(bitmap);
@@ -96,7 +96,7 @@ public class SelectedImage extends AppCompatActivity {
     }
 
     /**
-     * Load File extras from GalleryAdapter.java
+     * Load File extras from MyTripsAdapter.java
      *
      * @return
      */
@@ -269,21 +269,23 @@ public class SelectedImage extends AppCompatActivity {
         Intent intent = new Intent();
 
         //  This bit is not necessary since onActivityResult(...) in MainActivity
-        //  MainActivity intercepts this regardless and loads the GalleryFragment again
+        //  MainActivity intercepts this regardless and loads the MyTripsFragment again
         //  TODO: Keep it for now as it can be handy
         intent.putExtra("ImageCaption", selectedImageDescription);
         setResult(RESULT_OK, intent);
+
         super.onBackPressed();
         finish();
     }
 
     /**
      * This method creates the sharing intent based on the sharing type
-     * @param type      Sharing type
-     * @param body      Message body
-     * @param subject   Message subject
-     * @param uri       Message Uri (Image) if any
-     * @return          An intent with all the corresponding extras
+     *
+     * @param type    Sharing type
+     * @param body    Message body
+     * @param subject Message subject
+     * @param uri     Message Uri (Image) if any
+     * @return An intent with all the corresponding extras
      */
     private Intent SharingIntent(ShareType type, String body, String subject, Uri uri) {
 
@@ -322,9 +324,10 @@ public class SelectedImage extends AppCompatActivity {
     /**
      * This method handles all the sharing intents and packages them before sending
      * depending on the apps available on the user's device
-     * @param messageBody       The message body
-     * @param messageSubject    The message subject
-     * @param ImageFileUri      The file uri
+     *
+     * @param messageBody    The message body
+     * @param messageSubject The message subject
+     * @param ImageFileUri   The file uri
      */
     public void ShareMyTrip(String messageBody, String messageSubject, Uri ImageFileUri) {
 
@@ -339,37 +342,26 @@ public class SelectedImage extends AppCompatActivity {
         List<ResolveInfo> resInfoList = packageManager.queryIntentActivities(sendIntent, 0);
         List<LabeledIntent> intentList = new ArrayList<>();
 
-        for (int i = 0; i < resInfoList.size(); i++)
-        {
+        for (int i = 0; i < resInfoList.size(); i++) {
             // Extract the label, append it, and repackage it in a LabeledIntent
             ResolveInfo resInfo = resInfoList.get(i);
             String packageName = resInfo.activityInfo.packageName;
 
-            if(packageName.contains(ShareApps.ANDROID_EMAIL.toString()))
-            {
+            if (packageName.contains(ShareApps.ANDROID_EMAIL.toString())) {
                 emailIntent.setPackage(packageName);
-            }
-            else if(packageName.contains(ShareApps.TWITTER.toString()) || packageName.contains(ShareApps.FACEBOOK.toString())
-                    || packageName.contains(ShareApps.MMS.toString()) || packageName.contains(ShareApps.WHATSAPP.toString()))
-            {
+            } else if (packageName.contains(ShareApps.TWITTER.toString()) || packageName.contains(ShareApps.FACEBOOK.toString())
+                    || packageName.contains(ShareApps.MMS.toString()) || packageName.contains(ShareApps.WHATSAPP.toString())) {
                 Intent intent = new Intent();
 
-                if (packageName.contains(ShareApps.MMS.toString()))
-                {
+                if (packageName.contains(ShareApps.MMS.toString())) {
                     intent = SharingIntent(ShareType.TEXT, messageBody, messageSubject, null);
-                }
-                else if (packageName.contains(ShareApps.TWITTER.toString()))
-                {
+                } else if (packageName.contains(ShareApps.TWITTER.toString())) {
                     intent = SharingIntent(ShareType.TEXT, messageBody, messageSubject, null);
-                }
-                else if (packageName.contains(ShareApps.FACEBOOK.toString()))
-                {
+                } else if (packageName.contains(ShareApps.FACEBOOK.toString())) {
                     //  Facebook does not allow both Text and Image yet so we only send an image
                     //  We may need to access the Facebook SDK but it does not allow user to choose how to share
                     intent = SharingIntent(ShareType.IMAGE, "", "", Uri.fromFile(mLoadedFile));
-                }
-                else if (packageName.contains(ShareApps.WHATSAPP.toString()))
-                {
+                } else if (packageName.contains(ShareApps.WHATSAPP.toString())) {
                     intent = SharingIntent(ShareType.TEXT_AND_IMAGE, messageBody, messageSubject, Uri.fromFile(mLoadedFile));
                 }
 
@@ -381,7 +373,7 @@ public class SelectedImage extends AppCompatActivity {
         }
 
         // convert intentList to array
-        LabeledIntent[] extraIntents = intentList.toArray( new LabeledIntent[ intentList.size() ]);
+        LabeledIntent[] extraIntents = intentList.toArray(new LabeledIntent[intentList.size()]);
 
         //  Attach the extra intents to original openInChooser intent
         openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
@@ -390,20 +382,23 @@ public class SelectedImage extends AppCompatActivity {
         startActivity(openInChooser);
     }
 
-
+    /**
+     * Enums for various sharing apps
+     * To be used for MyTrip sharing
+     */
     public enum ShareApps {
-        MMS ("mms"),
-        ANDROID_EMAIL ("android.email"),
-        TWITTER ("twitter"),
-        FACEBOOK ("facebook"),
-        WHATSAPP ("whatsapp");
+        MMS("mms"),
+        ANDROID_EMAIL("android.email"),
+        TWITTER("twitter"),
+        FACEBOOK("facebook"),
+        WHATSAPP("whatsapp");
 
         private final String text;
 
         /**
          * @param text
          */
-        private ShareApps (final String text) {
+        private ShareApps(final String text) {
             this.text = text;
         }
 
