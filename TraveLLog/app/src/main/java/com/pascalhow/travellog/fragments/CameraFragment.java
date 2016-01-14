@@ -100,7 +100,7 @@ public class CameraFragment extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
         mainActivity.fab.setVisibility(View.VISIBLE);
-
+        mainActivity.setTitle("Camera");
         //  Get the user to give necessary access to the camera
         getAppPermissions();
 

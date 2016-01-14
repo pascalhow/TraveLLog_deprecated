@@ -46,6 +46,8 @@ public class MyTripsFragment extends Fragment {
     @Bind(R.id.myTrips_list)
     RecyclerView recyclerView;
 
+    @Bind(R.id.textView_myTrips)
+    TextView textView_myTrips;
 
     @Bind(R.id.imageView_myTrips_placeHolder)
     ImageView imageView_myTrips;
@@ -69,6 +71,7 @@ public class MyTripsFragment extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
         mainActivity.fab.setVisibility(View.GONE);
+        mainActivity.setTitle("MyTrips");
 
         folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName);
 
@@ -88,6 +91,7 @@ public class MyTripsFragment extends Fragment {
         //  Remove placeholder image and text if images from folder are loaded successfully
         if(loadImages())
         {
+            textView_myTrips.setVisibility(View.INVISIBLE);
             imageView_myTrips.setVisibility(View.INVISIBLE);
         }
 
@@ -202,6 +206,16 @@ public class MyTripsFragment extends Fragment {
     {
         super.onResume();
 
-        loadImages();
+        //  Remove placeholder image and text if images from folder are loaded successfully
+        if(loadImages())
+        {
+            textView_myTrips.setVisibility(View.INVISIBLE);
+            imageView_myTrips.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            textView_myTrips.setVisibility(View.VISIBLE);
+            imageView_myTrips.setVisibility(View.VISIBLE);
+        }
     }
 }

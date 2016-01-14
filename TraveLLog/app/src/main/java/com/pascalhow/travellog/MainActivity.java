@@ -26,11 +26,10 @@ import com.pascalhow.travellog.fragments.MyTripsFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public FloatingActionButton fab;
-
     private static final String FRAGMENT_CAMERA = "camera";
     private static final String FRAGMENT_MYTRIPS = "mytrips";
     private static final String FRAGMENT_IMPORT = "import";
+    public FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,26 +56,53 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //  Load the camera fragment for starters
-        loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
+        //  Load the myTrips fragment for starters
+        loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
     }
 
     private void loadFragment(Fragment fragment, String tag) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_content, fragment, tag)
-//                .addToBackStack(null)
-                .commitAllowingStateLoss();
+
+        switch (tag) {
+
+//              MyTrips fragment is the first fragment to be displayed so we don't addToBackStack()
+            case FRAGMENT_MYTRIPS:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment, tag)
+                                //.commitAllowingStateLoss();
+                        .commit();
+                break;
+
+            case FRAGMENT_CAMERA:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment, tag)
+//                        .addToBackStack(null)
+//                        .commitAllowingStateLoss();
+                        .commit();
+                break;
+            case FRAGMENT_IMPORT:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment, tag)
+//                        .addToBackStack(null)
+//                        .commitAllowingStateLoss();
+                        .commit();
+                break;
+
+            default:
+                break;
+        }
     }
+
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+                super.onBackPressed();
         }
     }
 
@@ -94,8 +120,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch(id)
-        {
+        switch (id) {
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,11 +134,11 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             //  These are under the Single group
-            case R.id.nav_camera:
-                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
-                break;
             case R.id.nav_mytrips:
                 loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+                break;
+            case R.id.nav_camera:
+                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
                 break;
             case R.id.nav_import:
                 loadFragment(new ImportFragment(), FRAGMENT_IMPORT);
@@ -138,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 //                fab.setVisibility(View.VISIBLE);
 
                 //  Load MyTripsFragment again to update the image description in the CardView items
-//                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
     }

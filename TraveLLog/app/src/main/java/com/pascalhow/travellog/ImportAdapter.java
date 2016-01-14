@@ -15,7 +15,9 @@
  */
 package com.pascalhow.travellog;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.ExifInterface;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
@@ -76,9 +78,16 @@ public class ImportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         super.onAttachedToRecyclerView(recyclerView);
     }
 
+    public Context getContext()
+    {
+        return this.context;
+    }
+
     public static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView mImageView;
         private MyTripsItem item;
+        private Activity activity;
+        private final String tag_selectedImage = "SelectedImage";
 
         public ImageViewHolder(View v) {
             super(v);
@@ -90,31 +99,42 @@ public class ImportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void onClick(View view) {
 
             String ImageFolderName = "TraveLLog";
+             activity = (Activity)view.getContext();
 
             //  Copy file from Camera folder to TraveLLog folder
             File source = new File(item.getImagePath());
 
-            if ((FilenameUtils.getExtension(source.getName()).contains("jpg") || (FilenameUtils.getExtension(source.getName()).contains("png")))) {
-                //  Generate a filename based in our local format based on the file metadata date
-                String datedFileName = generateDatedFileName(item.getImagePath());
+            //  User could have deleted the image after having loaded our ImportFragment
+            if(source.exists()) {
+                //  We only want jpg and png
+                if ((FilenameUtils.getExtension(source.getName()).contains("jpg") || (FilenameUtils.getExtension(source.getName()).contains("png")))) {
+                    //  Generate a filename based in our local format based on the file metadata date
+                    String datedFileName = generateDatedFileName(item.getImagePath());
 
-                File dest = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName + File.separator + datedFileName);
+                    File dest = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName + File.separator + datedFileName);
 
-                //  Check if file exists first
-                //  TODO: Otherwise ask user
-                if (!dest.exists()) {
-                    try {
-                        FileUtils.copyFile(source, dest);
-                        Toast.makeText(view.getContext(), "File copied: " + item.getImagePath(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(view.getContext(), "Cannot copy file", Toast.LENGTH_SHORT).show();
+                    //  Check if file exists first
+                    //  TODO: Otherwise ask user
+                    if (!dest.exists()) {
+
+                        try {
+                            FileUtils.copyFile(source, dest);
+                            Intent intent = new Intent(view.getContext(), SelectedImage.class);
+                            intent.putExtra(tag_selectedImage, dest);
+                            activity.startActivityForResult(intent, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(view.getContext(), "Cannot copy file", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(view.getContext(), "File already exists", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(view.getContext(), "File already exists", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "File not jpg or png", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(view.getContext(), "File not jpg or png", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(view.getContext(), "File does not exist", Toast.LENGTH_SHORT).show();
             }
         }
 

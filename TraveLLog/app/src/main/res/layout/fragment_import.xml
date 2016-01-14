@@ -11,6 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.pascalhow.travellog.MainActivity"
     tools:showIn="@layout/app_bar_main">
+    <!--android:background="#ffffff" >-->
 
     <ImageView
         android:id="@+id/imageView_import_placeHolder"

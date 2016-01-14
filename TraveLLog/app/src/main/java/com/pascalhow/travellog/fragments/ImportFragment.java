@@ -65,6 +65,7 @@ public class ImportFragment extends Fragment {
 
         mainActivity = (MainActivity) getActivity();
         mainActivity.fab.setVisibility(View.GONE);
+        mainActivity.setTitle("Import");
 
 //        folderPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "Facebook");
         folderPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "Camera");

@@ -21,7 +21,7 @@
     <string name="camera_image_description_save_button_text">Save</string>
     <string name="camera_image_description_cancel_button_text">Cancel</string>
 
-    <string name="myTrips_fragment_title">MyTrips Fragment!</string>
+    <string name="myTrips_fragment_title">Save your memories here!</string>
     <string name="menu_myTrips_title">MyTrips</string>
 
     <string name="import_fragment_title">Import Fragment!</string>
