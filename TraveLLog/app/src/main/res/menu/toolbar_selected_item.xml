@@ -5,13 +5,13 @@
     <item android:id="@+id/action_edit"
         android:title="@string/toolbar_edit_selected_image"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_edit"
+        android:icon="@drawable/ic_edit_white"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_share"
         android:title="@string/toolbar_share_selected_image"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_toolbar_share"
+        android:icon="@drawable/ic_share_white"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_delete"

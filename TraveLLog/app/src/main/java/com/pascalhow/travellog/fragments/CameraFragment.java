@@ -16,6 +16,7 @@
 package com.pascalhow.travellog.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -260,7 +261,7 @@ public class CameraFragment extends Fragment {
                     textView_imageDescription.setText(exif.getAttribute(JPG_exifTag_imageDescription));
 
                 } catch (IOException e) {
-                    Log.i("CameraFragment.java", "CameraFragment Exception: Image description could not be saved");
+//                    Log.i("CameraFragment.java", "CameraFragment Exception: Image description could not be saved");
                 }
                 break;
             }
@@ -272,7 +273,7 @@ public class CameraFragment extends Fragment {
                 break;
             }
             default: {
-                Log.i("CameraFragment.java", captionType.toString() + " - Could not be saved");
+//                Log.i("CameraFragment.java", captionType.toString() + " - Could not be saved");
                 break;
             }
         }
@@ -327,6 +328,7 @@ public class CameraFragment extends Fragment {
     /**
      * This method requests for the permissions needed for the Camera functionality to work
      */
+    @TargetApi(23)
     private void getAppPermissions() {
         final List<String> permissionsList = new ArrayList<>();
 
@@ -336,9 +338,12 @@ public class CameraFragment extends Fragment {
         addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permissionsList.size() > 0) {
-            //  Ask for user permission for each ungranted permission needed by the camera
-            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                    REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            try {
+                //  Ask for user permission for each ungranted permission needed by the camera
+                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            }
+            catch(Exception e){}
             return;
         }
 

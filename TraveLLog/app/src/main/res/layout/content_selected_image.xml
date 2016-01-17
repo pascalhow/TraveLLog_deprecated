@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_fragment_picture" />
+            android:src="@drawable/ic_picture" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,19 +51,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_done"
+                android:drawableLeft="@drawable/ic_check_white"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/camera_image_description_save_button_text"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
+            <View
+                android:layout_width="@dimen/activity_content_spacing_horizontal"
+                android:layout_height="wrap_content" />
+
             <Button
                 android:id="@+id/selectedImage_button_cancelImageDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableLeft="@drawable/ic_clear"
+                android:drawableLeft="@drawable/ic_clear_white"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/camera_image_description_cancel_button_text"

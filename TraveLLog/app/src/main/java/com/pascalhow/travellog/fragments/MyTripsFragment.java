@@ -123,7 +123,7 @@ public class MyTripsFragment extends Fragment {
                     //  Load all the images in the folder into the images list
                     images.add(
                             new MyTripsItemBuilder()
-                                    .setTitle("Image " + i)
+                                    .setTitle("Image " + (i+1))
                                     .setUrl(folderPath.listFiles()[i].getAbsolutePath())
                                     .build()
                     );

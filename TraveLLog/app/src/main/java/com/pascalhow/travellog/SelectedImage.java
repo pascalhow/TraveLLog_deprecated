@@ -254,7 +254,7 @@ public class SelectedImage extends AppCompatActivity {
                     textView_selectedImage.setText(exif.getAttribute(JPG_exifTag_imageDescription));
 
                 } catch (IOException e) {
-                    Log.i("SelectedImage.java", "SelectedImage Exception: Image description could not be saved");
+//                    Log.i("SelectedImage.java", "SelectedImage Exception: Image description could not be saved");
                 }
                 break;
             }
@@ -268,7 +268,7 @@ public class SelectedImage extends AppCompatActivity {
                 break;
             }
             default: {
-                Log.i("SelectedImage.java", captionType.toString() + " - Could not be saved");
+//                Log.i("SelectedImage.java", captionType.toString() + " - Could not be saved");
                 break;
             }
         }

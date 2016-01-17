@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/activity_content_spacing_vertical"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_fragment_picture" />
+        android:src="@drawable/ic_picture" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/myTrips_list"
