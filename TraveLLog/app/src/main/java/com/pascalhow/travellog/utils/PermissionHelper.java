@@ -1,8 +1,17 @@
 package com.pascalhow.travellog.utils;
 
+<<<<<<< HEAD
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
+=======
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
+
+import java.util.ArrayList;
+>>>>>>> Reviewed permission request code
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +42,7 @@ public class PermissionHelper {
         }
     }
 
+<<<<<<< HEAD
     /**
      * Performs a check whether all permissions for the app have been granted
      * To be used in onRequestPermissionsResult(...)
@@ -40,6 +50,8 @@ public class PermissionHelper {
      * @param grantResults  Results of the permissions based on user
      * @return  true if all permissions granted
      */
+=======
+>>>>>>> Reviewed permission request code
     public static boolean AllPermissionsGranted(String[] permissions, int[] grantResults)
     {
         // Fill with permission results

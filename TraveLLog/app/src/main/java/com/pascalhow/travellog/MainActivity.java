@@ -5,10 +5,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+<<<<<<< HEAD
 import android.net.Uri;
+=======
+>>>>>>> Reviewed permission request code
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -29,10 +30,18 @@ import com.pascalhow.travellog.fragments.AboutFragment;
 import com.pascalhow.travellog.fragments.CameraFragment;
 import com.pascalhow.travellog.fragments.ImportFragment;
 import com.pascalhow.travellog.fragments.MyTripsFragment;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
+<<<<<<< HEAD
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> Reviewed permission request code
 
 
 public class MainActivity extends AppCompatActivity
@@ -43,11 +52,15 @@ public class MainActivity extends AppCompatActivity
     private static final String FRAGMENT_IMPORT = "import";
     private static final String FRAGMENT_ABOUT = "about";
 
+<<<<<<< HEAD
     private final int CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE = 1;
     private String ImageFolderName = "TraveLLog";
     private String pictureFilePath;
 
 //    public FloatingActionButton fab;
+=======
+    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
+>>>>>>> Reviewed permission request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,11 +245,14 @@ public class MainActivity extends AppCompatActivity
                 loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
+<<<<<<< HEAD
 
         if (requestCode == CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
             }
         }
+=======
+>>>>>>> Reviewed permission request code
     }
 }

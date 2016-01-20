@@ -15,6 +15,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
+=======
+
+>>>>>>> Reviewed permission request code
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
