@@ -15,10 +15,13 @@
  */
 package com.pascalhow.travellog.fragments;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,9 +38,11 @@ import com.pascalhow.travellog.MyTripsAdapter;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.model.MyTripsItem;
 import com.pascalhow.travellog.model.MyTripsItemBuilder;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,6 +63,8 @@ public class MyTripsFragment extends Fragment {
     private String ImageFolderName = "TraveLLog";
     private ArrayList<MyTripsItem> imagesList = new ArrayList<>();
     private File folderPath;
+    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
+
     private int count = 0;
     private int loadLimit = 12;
 
@@ -72,6 +79,8 @@ public class MyTripsFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         mainActivity.fab.setVisibility(View.GONE);
         mainActivity.setTitle("MyTrips");
+
+        getAppPermissions();
 
         folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName);
 
@@ -133,7 +142,7 @@ public class MyTripsFragment extends Fragment {
             }
             catch(Exception ex)
             {
-                Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "External storage access needed", Toast.LENGTH_SHORT).show();
             }
         }
         mAdapter.setItemList(images);
@@ -169,6 +178,54 @@ public class MyTripsFragment extends Fragment {
 //        mAdapter.notifyDataSetChanged();
 //
 //        return imageLoaded;
+    }
+
+    /**
+     * This method requests for the permissions needed for the Camera functionality to work
+     */
+    @TargetApi(23)
+    private void getAppPermissions() {
+        final List<String> permissionsList = new ArrayList<>();
+
+        //  Add permission to permission list if they are not currently granted
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.CAMERA);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionsList.size() > 0) {
+
+            //  Ask for user permission for each ungranted permission needed
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            return;
+        }
+
+        //  TODO: DO something once we get user permissions
+
+    }
+
+    /**
+     * Callback with the request from requestPermission(...)
+     *
+     * @param requestCode  The code referring to the permission requested
+     * @param permissions  The list of permissions requested
+     * @param grantResults The result of the requested permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                if(!PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
+
+                    // Not all permissions have been granted
+                    Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 //    private class MyTripsLongOperation extends AsyncTask<String, Void, String> {

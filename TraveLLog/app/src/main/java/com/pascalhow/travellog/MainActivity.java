@@ -4,14 +4,9 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -29,8 +24,8 @@ import android.widget.Toast;
 import com.pascalhow.travellog.fragments.CameraFragment;
 import com.pascalhow.travellog.fragments.ImportFragment;
 import com.pascalhow.travellog.fragments.MyTripsFragment;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +40,6 @@ public class MainActivity extends AppCompatActivity
     private static final String FRAGMENT_IMPORT = "import";
     public FloatingActionButton fab;
 
-    private final int CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE = 1;
     private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
 
     @Override
@@ -63,7 +57,7 @@ public class MainActivity extends AppCompatActivity
 //            public void onClick(View view) {
 //            }
 //        });
-        getAppPermissions();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -183,89 +177,6 @@ public class MainActivity extends AppCompatActivity
                 //  Load MyTripsFragment again to update the image description in the CardView items
                 loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
-        }
-    }
-
-    /**
-     * This method requests for the permissions needed for the Camera functionality to work
-     */
-    @TargetApi(23)
-    private void getAppPermissions() {
-        final List<String> permissionsList = new ArrayList<>();
-
-        //  Add the user permissions
-        addPermission(permissionsList, Manifest.permission.CAMERA);
-        addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
-        addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permissionsList.size() > 0) {
-
-            try {
-                //  Ask for user permission for each ungranted permission needed by the camera
-
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-            }
-            catch(Exception e){}
-            return;
-        }
-
-        fab.setVisibility(View.VISIBLE);
-
-    }
-
-    /**
-     * This method adds the permission string to a permission list if they are not currently granted
-     *
-     * @param permissionsList
-     * @param permission
-     */
-    private void addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-        }
-    }
-
-    /**
-     * Callback with the request from requestPermission(...)
-     *
-     * @param requestCode  The code referring to the permission requested
-     * @param permissions  The list of permissions requested
-     * @param grantResults The result of the requested permissions
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<>();
-
-                // Initial
-                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++) {
-                    perms.put(permissions[i], grantResults[i]);
-                }
-
-                // Check if all permissions have been granted
-                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-                    fab.setVisibility(View.VISIBLE);
-
-                } else {
-                    // Permission Denied
-                    Toast.makeText(this, "Some permissions are denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

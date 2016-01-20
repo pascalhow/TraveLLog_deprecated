@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.utils.ImageHelper;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,13 +85,11 @@ public class CameraFragment extends Fragment {
 
     @Bind(R.id.camera_button_cancelImageDescription)
     Button button_cancelImageDescription;
-
+    MainActivity mainActivity;
     private String pictureFilePath;
     private int bitmapWidth = 1000;
     private int bitmapHeight = 700;
-
     private String ImageFolderName = "TraveLLog";
-    MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -332,18 +331,14 @@ public class CameraFragment extends Fragment {
     private void getAppPermissions() {
         final List<String> permissionsList = new ArrayList<>();
 
-        //  Add the user permissions
-        addPermission(permissionsList, Manifest.permission.CAMERA);
-        addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
-        addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        //  Add permission to permission list if they are not currently granted
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.CAMERA);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permissionsList.size() > 0) {
-            try {
-                //  Ask for user permission for each ungranted permission needed by the camera
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-            }
-            catch(Exception e){}
+            //  Ask for user permission for each ungranted permission needed by the camera
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
             return;
         }
 
@@ -368,18 +363,6 @@ public class CameraFragment extends Fragment {
     }
 
     /**
-     * This method adds the permission string to a permission list if they are not currently granted
-     *
-     * @param permissionsList
-     * @param permission
-     */
-    private void addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-        }
-    }
-
-    /**
      * Callback with the request from requestPermission(...)
      *
      * @param requestCode  The code referring to the permission requested
@@ -392,25 +375,11 @@ public class CameraFragment extends Fragment {
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<>();
 
-                // Initial
-                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++) {
-                    perms.put(permissions[i], grantResults[i]);
-                }
-
-                // Check if all permissions have been granted
-                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
+                if(PermissionHelper.AllPermissionsGranted(permissions, grantResults))
+                {
                     // All Permissions Granted so set the camera button onClickListener
-                    mainActivity.fab.setOnClickListener(new View.OnClickListener(){
+                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
@@ -426,14 +395,58 @@ public class CameraFragment extends Fragment {
 
                             //  Start the camera activity
                             startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-
-
                         }
                     });
-                } else {
+                }
+                else
+                {
                     // Permission Denied
                     Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
                 }
+//                Map<String, Integer> perms = new HashMap<>();
+//
+//                // Initial
+//                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
+//                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+//                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+//
+//                boolean granted = PermissionHelper.isAllPermissionsGranted(permissions, grantResults);
+//
+//                // Fill with results
+//                for (int i = 0; i < permissions.length; i++) {
+//                    perms.put(permissions[i], grantResults[i]);
+//                }
+//
+//                // Check if all permissions have been granted
+//                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+//                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+//                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//
+//                    // All Permissions Granted so set the camera button onClickListener
+//                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//
+//                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                            //  This line below launches the google camera
+////                            Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
+//
+//                            //  Create timestamped file for captured images
+//                            File file = CreateDatedFile();
+//
+//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//
+//                            //  Start the camera activity
+//                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
+//
+//
+//                        }
+//                    });
+//                } else {
+//                    // Permission Denied
+//                    Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+//                }
             }
             break;
             default:
@@ -441,27 +454,23 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    public enum ImageCaptionType {
-        IMAGE_DESCRIPTION, LOCATION, PEOPLE
-    }
-
     @Override
-    public void setUserVisibleHint(boolean visible)
-    {
+    public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible && isResumed())
-        {
+        if (visible && isResumed()) {
             onResume();
         }
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-        if (!getUserVisibleHint())
-        {
+        if (!getUserVisibleHint()) {
             return;
         }
+    }
+
+    public enum ImageCaptionType {
+        IMAGE_DESCRIPTION, LOCATION, PEOPLE
     }
 }
