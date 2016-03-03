@@ -17,15 +17,7 @@ package com.pascalhow.travellog.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import android.content.Intent;
-=======
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
-import android.os.AsyncTask;
-import android.os.Build;
->>>>>>> Reviewed permission request code
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -68,8 +60,6 @@ public class MyTripsFragment extends Fragment {
     private String ImageFolderName = "TraveLLog";
     private ArrayList<MyTripsItem> imagesList = new ArrayList<>();
     private File folderPath;
-    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
-
     private int count = 0;
     private int loadLimit = 12;
 
@@ -85,8 +75,6 @@ public class MyTripsFragment extends Fragment {
 
         getAppPermissions();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         //  If app already has all necessary permissions then carry on
 //        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -96,10 +84,6 @@ public class MyTripsFragment extends Fragment {
 //            }
 //        });
 
-=======
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
         folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName);
 
         //  New layout manager and display content in reverse order
@@ -156,16 +140,7 @@ public class MyTripsFragment extends Fragment {
 
                     imageLoaded = true;
                 }
-<<<<<<< HEAD
             } catch (Exception ex) {
-=======
-            }
-            catch(Exception ex)
-            {
-<<<<<<< HEAD
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
                 Toast.makeText(getActivity(), "External storage access needed", Toast.LENGTH_SHORT).show();
             }
         }
@@ -240,22 +215,12 @@ public class MyTripsFragment extends Fragment {
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-<<<<<<< HEAD
-<<<<<<< HEAD
                 if (PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
                     //  TODO: Find a way to disable the camera
 
 //                    mainActivity.fab.setVisibility(View.VISIBLE);
                 }
                 else {
-=======
-                if(!PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
-
->>>>>>> Reviewed permission request code
-=======
-                if(!PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
-
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
                     // Not all permissions have been granted
                     Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
                 }

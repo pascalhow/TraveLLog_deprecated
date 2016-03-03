@@ -90,13 +90,7 @@ public class CameraFragment extends Fragment {
     private int bitmapWidth = 1000;
     private int bitmapHeight = 700;
     private String ImageFolderName = "TraveLLog";
-<<<<<<< HEAD
-<<<<<<< HEAD
     private static final String FRAGMENT_MYTRIPS = "mytrips";
-=======
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -343,7 +337,6 @@ public class CameraFragment extends Fragment {
         }
 
         //  If app already has all necessary permissions then carry on
-<<<<<<< HEAD
 //        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -361,28 +354,6 @@ public class CameraFragment extends Fragment {
 //                startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
 //            }
 //        });
-=======
-        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                //  This line below launches the google camera
-//                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
-
-                //  Create timestamped file for captured images
-                File file = CreateDatedFile();
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-
-                //  Start the camera activity
-                startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-            }
-        });
-<<<<<<< HEAD
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
     }
 
     /**
@@ -402,8 +373,6 @@ public class CameraFragment extends Fragment {
                 if(PermissionHelper.AllPermissionsGranted(permissions, grantResults))
                 {
                     // All Permissions Granted so set the camera button onClickListener
-<<<<<<< HEAD
-<<<<<<< HEAD
 //                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
@@ -422,81 +391,12 @@ public class CameraFragment extends Fragment {
 //                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
 //                        }
 //                    });
-=======
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
-                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                            //  This line below launches the google camera
-//                            Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
-
-                            //  Create timestamped file for captured images
-                            File file = CreateDatedFile();
-
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-
-                            //  Start the camera activity
-                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-                        }
-                    });
-<<<<<<< HEAD
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
                 }
                 else
                 {
                     // Permission Denied
                     Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
                 }
-//                Map<String, Integer> perms = new HashMap<>();
-//
-//                // Initial
-//                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
-//                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-//                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-//
-//                boolean granted = PermissionHelper.isAllPermissionsGranted(permissions, grantResults);
-//
-//                // Fill with results
-//                for (int i = 0; i < permissions.length; i++) {
-//                    perms.put(permissions[i], grantResults[i]);
-//                }
-//
-//                // Check if all permissions have been granted
-//                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-//                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-//                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//
-//                    // All Permissions Granted so set the camera button onClickListener
-//                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//
-//                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//                            //  This line below launches the google camera
-////                            Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
-//
-//                            //  Create timestamped file for captured images
-//                            File file = CreateDatedFile();
-//
-//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-//
-//                            //  Start the camera activity
-//                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-//
-//
-//                        }
-//                    });
-//                } else {
-//                    // Permission Denied
-//                    Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
-//                }
             }
             break;
             default:
@@ -504,8 +404,6 @@ public class CameraFragment extends Fragment {
         }
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     private void loadCamera()
     {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -519,10 +417,6 @@ public class CameraFragment extends Fragment {
         startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
     }
 
-=======
->>>>>>> Reviewed permission request code
-=======
->>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
     @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
