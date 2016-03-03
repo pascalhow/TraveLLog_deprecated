@@ -18,7 +18,10 @@
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 >>>>>>> Reviewed permission request code
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

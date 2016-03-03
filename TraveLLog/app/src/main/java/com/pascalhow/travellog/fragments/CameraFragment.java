@@ -91,9 +91,12 @@ public class CameraFragment extends Fragment {
     private int bitmapHeight = 700;
     private String ImageFolderName = "TraveLLog";
 <<<<<<< HEAD
+<<<<<<< HEAD
     private static final String FRAGMENT_MYTRIPS = "mytrips";
 =======
 >>>>>>> Reviewed permission request code
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -376,7 +379,10 @@ public class CameraFragment extends Fragment {
                 startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
             }
         });
+<<<<<<< HEAD
 >>>>>>> Reviewed permission request code
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
     }
 
     /**
@@ -397,6 +403,7 @@ public class CameraFragment extends Fragment {
                 {
                     // All Permissions Granted so set the camera button onClickListener
 <<<<<<< HEAD
+<<<<<<< HEAD
 //                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
@@ -416,6 +423,8 @@ public class CameraFragment extends Fragment {
 //                        }
 //                    });
 =======
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
                     mainActivity.fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -434,7 +443,10 @@ public class CameraFragment extends Fragment {
                             startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
                         }
                     });
+<<<<<<< HEAD
 >>>>>>> Reviewed permission request code
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
                 }
                 else
                 {
@@ -493,6 +505,7 @@ public class CameraFragment extends Fragment {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private void loadCamera()
     {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -508,6 +521,8 @@ public class CameraFragment extends Fragment {
 
 =======
 >>>>>>> Reviewed permission request code
+=======
+>>>>>>> 1138ad541955af42049c1080e84248b02c7363c6
     @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
