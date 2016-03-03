@@ -5,11 +5,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--  Strings for the toolbar  -->
-    <!--<string name="action_settings">Settings</string>-->
-    <!--<string name="action_about_me">About Me</string>-->
-
-    <!--  Strings for the toolbar  -->
-    <!--<string name="aboutme_fragment_title">Say something about me!</string>-->
 
     <!--  Strings for the 'Single' section of activity_main_drawer  -->
     <string name="menu_single_title">Single</string>
@@ -22,34 +17,22 @@
     <string name="camera_image_description_cancel_button_text">Cancel</string>
 
     <string name="myTrips_fragment_title">Save your memories here!</string>
-    <string name="menu_myTrips_title">MyTrips</string>
+    <string name="myTrips_title">MyTrips</string>
 
     <string name="import_fragment_title">Import Fragment!</string>
     <string name="menu_import_title">Import</string>
 
-    <!--<string name="settings_button_text">Settings</string>-->
-    <!--<string name="tools_fragment_title">Settings fragment!</string>-->
-    <!--<string name="menu_settings_title">Settings</string>-->
-    <!--<string name="pref_send_report">Send crash reports</string>-->
-    <!--<string name="pref_send_report_summary">Helps to fix bugs</string>-->
-    <!--<string name="pref_sync_frequency">Sync frequency</string>-->
-    <!--<string name="pref_sync_frequency_summary">Set the sync frequency</string>-->
-    <!--<string name="pref_user_name">Set username</string>-->
-    <!--<string name="pref_user_name_summary">Set your username</string>-->
-    <!--<string name="pref_email_address">Set email address</string>-->
-    <!--<string name="pref_email_address_summary">Set your email address</string>-->
-    <!--<string name="pref_user_profile">User Profile</string>-->
-    <!--<string name="pref_update_setting">Update Settings</string>-->
 
     <!--  Strings for the 'Communicate' section of activity_main_drawer  -->
     <string name="menu_communicate_title">Communicate</string>
-
-    <!--<string name="share_fragment_title">Select images to share!</string>-->
-    <!--<string name="menu_share_title">Share</string>-->
 
     <string name="title_activity_selected_image">Selected Image</string>
     <string name="toolbar_edit_selected_image">Edit</string>
     <string name="toolbar_share_selected_image">Share</string>
     <string name="toolbar_delete_selected_image">Delete</string>
+
+    <string name="title_activity_camera2">Camera</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_camera">CameraActivity</string>
 </resources>
 

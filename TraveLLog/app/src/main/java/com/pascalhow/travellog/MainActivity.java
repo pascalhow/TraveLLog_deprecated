@@ -2,16 +2,15 @@ package com.pascalhow.travellog;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -26,15 +25,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.pascalhow.travellog.fragments.AboutFragment;
 import com.pascalhow.travellog.fragments.CameraFragment;
 import com.pascalhow.travellog.fragments.ImportFragment;
 import com.pascalhow.travellog.fragments.MyTripsFragment;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity
@@ -43,10 +41,13 @@ public class MainActivity extends AppCompatActivity
     private static final String FRAGMENT_CAMERA = "camera";
     private static final String FRAGMENT_MYTRIPS = "mytrips";
     private static final String FRAGMENT_IMPORT = "import";
-    public FloatingActionButton fab;
+    private static final String FRAGMENT_ABOUT = "about";
 
     private final int CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE = 1;
-    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
+    private String ImageFolderName = "TraveLLog";
+    private String pictureFilePath;
+
+//    public FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +56,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
+//        fab = (FloatingActionButton) findViewById(R.id.fab);
+//
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //            }
 //        });
-        getAppPermissions();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
     }
 
-    private void loadFragment(Fragment fragment, String tag) {
+    public void loadFragment(Fragment fragment, String tag) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -107,6 +108,12 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 break;
 
+            case FRAGMENT_ABOUT:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main_content, fragment, tag)
+                        .commit();
+                break;
+
             default:
                 break;
         }
@@ -127,7 +134,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.toolbar_main, menu);
         return true;
     }
 
@@ -139,9 +146,54 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
+            //  TODO: Consider not loading the page if the fragment is currently loaded
+            case R.id.action_camera:
+                loadCamera();
+//                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
+                return true;
+            case R.id.action_import:
+                loadFragment(new ImportFragment(), FRAGMENT_IMPORT);
+                return true;
+            case R.id.action_mytrips:
+                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void loadCamera()
+    {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        //  Create timestamped file for captured images
+        File file = CreateDatedFile();
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+
+        //  Start the camera activity
+        startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
+    }
+
+    /**
+     * This method creates the dated file
+     *
+     * @return File with date formatted name
+     */
+    public File CreateDatedFile() {
+        //  Get the device current date to make each picture name unique
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_ssmmHH");
+        String formattedDate = dateFormat.format(calendar.getTime());
+
+        //  Save captured image on SD card
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator
+                + ImageFolderName + File.separator + "IMG_" + formattedDate + ".jpg");
+
+        //  Save the file path with current date and time
+        pictureFilePath = file.getPath();
+
+        return file;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -151,15 +203,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            //  These are under the Single group
-            case R.id.nav_mytrips:
-                loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
+            //  These are the items in the navigation menu
+            case R.id.nav_info:
+                loadFragment(new AboutFragment(), FRAGMENT_ABOUT);
                 break;
-            case R.id.nav_camera:
-                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
-                break;
-            case R.id.nav_import:
-                loadFragment(new ImportFragment(), FRAGMENT_IMPORT);
+            default:
                 break;
         }
 
@@ -184,88 +232,11 @@ public class MainActivity extends AppCompatActivity
                 loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
-    }
 
-    /**
-     * This method requests for the permissions needed for the Camera functionality to work
-     */
-    @TargetApi(23)
-    private void getAppPermissions() {
-        final List<String> permissionsList = new ArrayList<>();
-
-        //  Add the user permissions
-        addPermission(permissionsList, Manifest.permission.CAMERA);
-        addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
-        addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permissionsList.size() > 0) {
-
-            try {
-                //  Ask for user permission for each ungranted permission needed by the camera
-
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+        if (requestCode == CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                loadFragment(new CameraFragment(), FRAGMENT_CAMERA);
             }
-            catch(Exception e){}
-            return;
-        }
-
-        fab.setVisibility(View.VISIBLE);
-
-    }
-
-    /**
-     * This method adds the permission string to a permission list if they are not currently granted
-     *
-     * @param permissionsList
-     * @param permission
-     */
-    private void addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-        }
-    }
-
-    /**
-     * Callback with the request from requestPermission(...)
-     *
-     * @param requestCode  The code referring to the permission requested
-     * @param permissions  The list of permissions requested
-     * @param grantResults The result of the requested permissions
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<>();
-
-                // Initial
-                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++) {
-                    perms.put(permissions[i], grantResults[i]);
-                }
-
-                // Check if all permissions have been granted
-                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-                    fab.setVisibility(View.VISIBLE);
-
-                } else {
-                    // Permission Denied
-                    Toast.makeText(this, "Some permissions are denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

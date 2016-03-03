@@ -1,25 +1,19 @@
 package com.pascalhow.travellog.fragments;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-//import android.support.v7.widget.GridLayoutManager;
-//import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pascalhow.travellog.EndlessRecyclerOnScrollListener;
@@ -28,9 +22,11 @@ import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.model.MyTripsItem;
 import com.pascalhow.travellog.model.MyTripsItemBuilder;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,14 +41,14 @@ public class ImportFragment extends Fragment {
 
     private int imagesPerRow = 3;
     private int count = 0;
-    private int loadLimit = 12;
+    private int loadLimit = 20;
 
     private ImportAdapter mAdapter;
     private String ImageFolderName = "TraveLLog";
     private GridLayoutManager mLayoutManager;
 
     private ArrayList<MyTripsItem> imagesList = new ArrayList<>();
-
+    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
     private File folderPath;
     MainActivity mainActivity;
 
@@ -64,8 +60,9 @@ public class ImportFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.fab.setVisibility(View.GONE);
         mainActivity.setTitle("Import");
+
+        getAppPermissions();
 
 //        folderPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "Facebook");
         folderPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "Camera");
@@ -129,7 +126,7 @@ public class ImportFragment extends Fragment {
             }
             catch(Exception ex)
             {
-                Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "External storage access needed", Toast.LENGTH_SHORT).show();
             }
 
             //  Go to next set of images
@@ -141,7 +138,53 @@ public class ImportFragment extends Fragment {
         return imageLoaded;
     }
 
+    /**
+     * This method requests for the permissions needed for the Camera functionality to work
+     */
+    @TargetApi(23)
+    private void getAppPermissions() {
+        final List<String> permissionsList = new ArrayList<>();
 
+        //  Add permission to permission list if they are not currently granted
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.CAMERA);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionsList.size() > 0) {
+
+            //  Ask for user permission for each ungranted permission needed
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            return;
+        }
+
+        //  TODO: DO something once we get user permissions
+
+    }
+
+    /**
+     * Callback with the request from requestPermission(...)
+     *
+     * @param requestCode  The code referring to the permission requested
+     * @param permissions  The list of permissions requested
+     * @param grantResults The result of the requested permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                if(!PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
+
+                    // Not all permissions have been granted
+                    Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
     private class LongOperation extends AsyncTask<String, Void, String> {
 
         @Override

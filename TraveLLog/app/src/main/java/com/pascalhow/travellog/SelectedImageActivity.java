@@ -36,10 +36,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectedImage extends AppCompatActivity {
+public class SelectedImageActivity extends AppCompatActivity {
 
     private final String JPG_exifTag_imageDescription = "UserComment";
-    private final String tag_selectedImage = "SelectedImage";
+    private final String tag_selectedImage = "SelectedImageActivity";
 
     private int width = 700;
     private int height = 700;
@@ -186,7 +186,7 @@ public class SelectedImage extends AppCompatActivity {
     }
 
     /**
-     * This method loads the buttons in the SelectedImage Activity
+     * This method loads the buttons in the SelectedImageActivity Activity
      */
     private void LoadButtons() {
         selectedImage_button_saveImageDescription.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +254,7 @@ public class SelectedImage extends AppCompatActivity {
                     textView_selectedImage.setText(exif.getAttribute(JPG_exifTag_imageDescription));
 
                 } catch (IOException e) {
-//                    Log.i("SelectedImage.java", "SelectedImage Exception: Image description could not be saved");
+//                    Log.i("SelectedImageActivity.java", "SelectedImageActivity Exception: Image description could not be saved");
                 }
                 break;
             }
@@ -268,7 +268,7 @@ public class SelectedImage extends AppCompatActivity {
                 break;
             }
             default: {
-//                Log.i("SelectedImage.java", captionType.toString() + " - Could not be saved");
+//                Log.i("SelectedImageActivity.java", captionType.toString() + " - Could not be saved");
                 break;
             }
         }

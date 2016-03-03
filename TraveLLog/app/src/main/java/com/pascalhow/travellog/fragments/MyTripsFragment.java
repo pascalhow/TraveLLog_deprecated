@@ -15,10 +15,12 @@
  */
 package com.pascalhow.travellog.fragments;
 
-import android.os.AsyncTask;
-import android.os.Build;
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,39 +31,38 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pascalhow.travellog.EndlessRecyclerOnScrollListener;
+//import com.pascalhow.travellog.CameraActivity;
 import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.MyTripsAdapter;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.model.MyTripsItem;
 import com.pascalhow.travellog.model.MyTripsItemBuilder;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MyTripsFragment extends Fragment {
+    private final int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 2;
     @Bind(R.id.myTrips_list)
     RecyclerView recyclerView;
-
     @Bind(R.id.textView_myTrips)
     TextView textView_myTrips;
-
     @Bind(R.id.imageView_myTrips_placeHolder)
     ImageView imageView_myTrips;
-
+    MainActivity mainActivity;
     private MyTripsAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
-
     private String ImageFolderName = "TraveLLog";
     private ArrayList<MyTripsItem> imagesList = new ArrayList<>();
     private File folderPath;
     private int count = 0;
     private int loadLimit = 12;
 
-    MainActivity mainActivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,8 +71,18 @@ public class MyTripsFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.fab.setVisibility(View.GONE);
         mainActivity.setTitle("MyTrips");
+
+        getAppPermissions();
+
+        //  If app already has all necessary permissions then carry on
+//        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(), CameraActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + ImageFolderName);
 
@@ -89,8 +100,7 @@ public class MyTripsFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         //  Remove placeholder image and text if images from folder are loaded successfully
-        if(loadImages())
-        {
+        if (loadImages()) {
             textView_myTrips.setVisibility(View.INVISIBLE);
             imageView_myTrips.setVisibility(View.INVISIBLE);
         }
@@ -123,17 +133,15 @@ public class MyTripsFragment extends Fragment {
                     //  Load all the images in the folder into the images list
                     images.add(
                             new MyTripsItemBuilder()
-                                    .setTitle("Image " + (i+1))
+                                    .setTitle("Image " + (i + 1))
                                     .setUrl(folderPath.listFiles()[i].getAbsolutePath())
                                     .build()
                     );
 
                     imageLoaded = true;
                 }
-            }
-            catch(Exception ex)
-            {
-                Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+            } catch (Exception ex) {
+                Toast.makeText(getActivity(), "External storage access needed", Toast.LENGTH_SHORT).show();
             }
         }
         mAdapter.setItemList(images);
@@ -171,6 +179,58 @@ public class MyTripsFragment extends Fragment {
 //        return imageLoaded;
     }
 
+    /**
+     * This method requests for the permissions needed for the Camera functionality to work
+     */
+    @TargetApi(23)
+    private void getAppPermissions() {
+        final List<String> permissionsList = new ArrayList<>();
+
+        //  Add permission to permission list if they are not currently granted
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.CAMERA);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionsList.size() > 0) {
+
+            //  Ask for user permission for each ungranted permission needed
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+            return;
+        }
+
+        //  TODO: DO something once we get user permissions
+
+    }
+
+    /**
+     * Callback with the request from requestPermission(...)
+     *
+     * @param requestCode  The code referring to the permission requested
+     * @param permissions  The list of permissions requested
+     * @param grantResults The result of the requested permissions
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                if (PermissionHelper.AllPermissionsGranted(permissions, grantResults)) {
+                    //  TODO: Find a way to disable the camera
+
+//                    mainActivity.fab.setVisibility(View.VISIBLE);
+                }
+                else {
+                    // Not all permissions have been granted
+                    Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
+                }
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
 //    private class MyTripsLongOperation extends AsyncTask<String, Void, String> {
 //
 //        @Override
@@ -202,18 +262,14 @@ public class MyTripsFragment extends Fragment {
 //    }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
         //  Remove placeholder image and text if images from folder are loaded successfully
-        if(loadImages())
-        {
+        if (loadImages()) {
             textView_myTrips.setVisibility(View.INVISIBLE);
             imageView_myTrips.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        } else {
             textView_myTrips.setVisibility(View.VISIBLE);
             imageView_myTrips.setVisibility(View.VISIBLE);
         }

@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.ExifInterface;
-import android.os.Environment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,18 +26,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pascalhow.travellog.model.MyTripsItem;
 import com.pascalhow.travellog.utils.ImageHelper;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 
 
 public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.ViewHolder> {
@@ -106,7 +100,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.ViewHold
 
                 File file = new File(item.getImagePath());
 
-                Intent intent = new Intent(context, SelectedImage.class);
+                Intent intent = new Intent(context, SelectedImageActivity.class);
                 intent.putExtra(tag_selectedImage, file);
                 activity.startActivityForResult(intent, 1);
             }
@@ -128,7 +122,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.ViewHold
 //public class MyTripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //
 //    private final String JPG_exifTag_imageDescription = "UserComment";
-//    private final String tag_selectedImage = "SelectedImage";
+//    private final String tag_selectedImage = "SelectedImageActivity";
 //
 //    private ArrayList<MyTripsItem> itemList;
 //    private Context context;
@@ -190,7 +184,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.ViewHold
 //
 //                File file = new File(item.getImagePath());
 //
-//                Intent intent= new Intent(context, SelectedImage.class);
+//                Intent intent= new Intent(context, SelectedImageActivity.class);
 //                intent.putExtra(tag_selectedImage, file);
 //                activity.startActivityForResult(intent, 1);
 //            }

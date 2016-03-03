@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.pascalhow.travellog.MainActivity;
 import com.pascalhow.travellog.R;
 import com.pascalhow.travellog.utils.ImageHelper;
+import com.pascalhow.travellog.utils.PermissionHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,13 +85,12 @@ public class CameraFragment extends Fragment {
 
     @Bind(R.id.camera_button_cancelImageDescription)
     Button button_cancelImageDescription;
-
+    MainActivity mainActivity;
     private String pictureFilePath;
     private int bitmapWidth = 1000;
     private int bitmapHeight = 700;
-
     private String ImageFolderName = "TraveLLog";
-    MainActivity mainActivity;
+    private static final String FRAGMENT_MYTRIPS = "mytrips";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,15 +100,16 @@ public class CameraFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mainActivity = (MainActivity) getActivity();
-        mainActivity.fab.setVisibility(View.VISIBLE);
         mainActivity.setTitle("Camera");
         //  Get the user to give necessary access to the camera
         getAppPermissions();
 
         //  Create a directory for the camera images
-        CreateImageFolderDirectory(ImageFolderName);
+        createImageFolderDirectory(ImageFolderName);
 
-        LoadButtons();
+        loadButtons();
+
+//        loadCamera();
 
         return view;
     }
@@ -117,13 +118,7 @@ public class CameraFragment extends Fragment {
     /**
      * This method loads the CameraFragment save, cancel and edit buttons
      */
-    private void LoadButtons() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mainActivity.fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_white, mainActivity.getApplicationContext().getTheme()));
-        } else {
-            mainActivity.fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_camera_white));
-        }
+    private void loadButtons() {
 
         button_saveImageDescription.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +134,6 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description visible
                 button_editText.setVisibility(View.VISIBLE);
                 textView_imageDescription.setVisibility(View.VISIBLE);
-                mainActivity.fab.setVisibility(View.VISIBLE);
 
                 //  Save the text from Edit Text field onto the Text View
                 textView_imageDescription.setText(editText_imageDescription.getText().toString());
@@ -163,7 +157,6 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description visible
                 button_editText.setVisibility(View.VISIBLE);
                 textView_imageDescription.setVisibility(View.VISIBLE);
-                mainActivity.fab.setVisibility(View.VISIBLE);
             }
         });
 
@@ -186,7 +179,6 @@ public class CameraFragment extends Fragment {
                 //  Make Edit Text Button and Text Image Description gone
                 button_editText.setVisibility(View.GONE);
                 textView_imageDescription.setVisibility(View.GONE);
-                mainActivity.fab.setVisibility(View.GONE);
             }
         });
     }
@@ -216,7 +208,7 @@ public class CameraFragment extends Fragment {
      *
      * @param folderName
      */
-    public void CreateImageFolderDirectory(String folderName) {
+    public void createImageFolderDirectory(String folderName) {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator + folderName);
 
         //  If folder does not exist then create the directory
@@ -314,13 +306,14 @@ public class CameraFragment extends Fragment {
                 button_saveImageDescription.setVisibility(View.VISIBLE);    //  Save button
                 button_cancelImageDescription.setVisibility(View.VISIBLE);  //  Cancel button
 
-                mainActivity.fab.setVisibility(View.GONE);
-
                 //  Give focus to the edit text view
                 editText_imageDescription.requestFocus();
 
             } else {
                 Toast.makeText(getActivity(), "Picture was not taken!", Toast.LENGTH_SHORT).show();
+
+                //  Load the MyTrips fragment
+                mainActivity.loadFragment(new MyTripsFragment(), FRAGMENT_MYTRIPS);
             }
         }
     }
@@ -332,51 +325,35 @@ public class CameraFragment extends Fragment {
     private void getAppPermissions() {
         final List<String> permissionsList = new ArrayList<>();
 
-        //  Add the user permissions
-        addPermission(permissionsList, Manifest.permission.CAMERA);
-        addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
-        addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        //  Add permission to permission list if they are not currently granted
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.CAMERA);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
+        PermissionHelper.addPermission(getActivity(), permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permissionsList.size() > 0) {
-            try {
-                //  Ask for user permission for each ungranted permission needed by the camera
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
-                        REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-            }
-            catch(Exception e){}
+            //  Ask for user permission for each ungranted permission needed by the camera
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
             return;
         }
 
         //  If app already has all necessary permissions then carry on
-        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                //  This line below launches the google camera
-//                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
-
-                //  Create timestamped file for captured images
-                File file = CreateDatedFile();
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-
-                //  Start the camera activity
-                startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-            }
-        });
-    }
-
-    /**
-     * This method adds the permission string to a permission list if they are not currently granted
-     *
-     * @param permissionsList
-     * @param permission
-     */
-    private void addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permission);
-        }
+//        mainActivity.fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                //  This line below launches the google camera
+////                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
+//
+//                //  Create timestamped file for captured images
+//                File file = CreateDatedFile();
+//
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//
+//                //  Start the camera activity
+//                startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
+//            }
+//        });
     }
 
     /**
@@ -392,45 +369,31 @@ public class CameraFragment extends Fragment {
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<>();
 
-                // Initial
-                perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++) {
-                    perms.put(permissions[i], grantResults[i]);
-                }
-
-                // Check if all permissions have been granted
-                if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
+                if(PermissionHelper.AllPermissionsGranted(permissions, grantResults))
+                {
                     // All Permissions Granted so set the camera button onClickListener
-                    mainActivity.fab.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-
-                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                            //  This line below launches the google camera
-//                            Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
-
-                            //  Create timestamped file for captured images
-                            File file = CreateDatedFile();
-
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-
-                            //  Start the camera activity
-                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
-
-
-                        }
-                    });
-                } else {
+//                    mainActivity.fab.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//
+//                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                            //  This line below launches the google camera
+////                            Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.google.android.GoogleCamera");
+//
+//                            //  Create timestamped file for captured images
+//                            File file = CreateDatedFile();
+//
+//                            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+//
+//                            //  Start the camera activity
+//                            startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
+//                        }
+//                    });
+                }
+                else
+                {
                     // Permission Denied
                     Toast.makeText(getActivity(), "Some permissions are denied", Toast.LENGTH_SHORT).show();
                 }
@@ -441,27 +404,36 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    public enum ImageCaptionType {
-        IMAGE_DESCRIPTION, LOCATION, PEOPLE
+    private void loadCamera()
+    {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        //  Create timestamped file for captured images
+        File file = CreateDatedFile();
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+
+        //  Start the camera activity
+        startActivityForResult(intent, CAPTURE_IMAGE_FULLSIZE_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
-    public void setUserVisibleHint(boolean visible)
-    {
+    public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible && isResumed())
-        {
+        if (visible && isResumed()) {
             onResume();
         }
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-        if (!getUserVisibleHint())
-        {
+        if (!getUserVisibleHint()) {
             return;
         }
+    }
+
+    public enum ImageCaptionType {
+        IMAGE_DESCRIPTION, LOCATION, PEOPLE
     }
 }

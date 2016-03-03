@@ -119,7 +119,7 @@ public class ImportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                         try {
                             FileUtils.copyFile(source, dest);
-                            Intent intent = new Intent(view.getContext(), SelectedImage.class);
+                            Intent intent = new Intent(view.getContext(), SelectedImageActivity.class);
                             intent.putExtra(tag_selectedImage, dest);
                             activity.startActivityForResult(intent, 1);
                         } catch (IOException e) {
