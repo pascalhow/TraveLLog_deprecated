@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_camera"
+        android:title="@string/toolbar_edit_selected_image"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_camera_white"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_import"
+        android:title="@string/toolbar_share_selected_image"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_file_download_white"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_mytrips"
+        android:title="@string/myTrips_title"
+        app:showAsAction="never" />
+
+    <!--<item android:id="@+id/action_delete"-->
+        <!--android:title="@string/toolbar_delete_selected_image"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never" />-->
+</menu>
