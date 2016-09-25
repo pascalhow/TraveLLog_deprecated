@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">TraveLLog</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!--  Strings for the toolbar  -->
+
+    <!--  Strings for the 'Single' section of activity_main_drawer  -->
+    <string name="menu_single_title">Single</string>
+
+    <string name="menu_camera_title">Camera</string>
+    <string name="image_caption_title">Caption</string>
+    <string name="camera_image_description_edit_button_text">Edit</string>
+    <string name="camera_image_description_edit_text_hint">Add a description</string>
+    <string name="camera_image_description_save_button_text">Save</string>
+    <string name="camera_image_description_cancel_button_text">Cancel</string>
+
+    <string name="myTrips_fragment_title">Save your memories here!</string>
+    <string name="myTrips_title">MyTrips</string>
+
+    <string name="import_fragment_title">Import Fragment!</string>
+    <string name="menu_import_title">Import</string>
+
+
+    <!--  Strings for the 'Communicate' section of activity_main_drawer  -->
+    <string name="menu_communicate_title">Communicate</string>
+
+    <string name="title_activity_selected_image">Selected Image</string>
+    <string name="toolbar_edit_selected_image">Edit</string>
+    <string name="toolbar_share_selected_image">Share</string>
+    <string name="toolbar_delete_selected_image">Delete</string>
+
+    <string name="title_activity_camera2">Camera</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_camera">CameraActivity</string>
+</resources>
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.1.1_0a3b6ec2626db14067a25f75001b005d0dea5c8e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.1.1_37eb3a23178e463cd5443873598ffb4f0f7a85ee/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-23.1.1_fc09845b88cd170313d135492230c9fd20af299c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_e12eab61563e95b3ab0a4e01a04a2e8498fe2af2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/design/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.1.1_4392875925ab42aabb4e58934a954a971139af0e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-7.0.1_823374addba387acc5cc640c4a3591064be1e252/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.1/jars/libs/internal_impl-23.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.1.1_f51b449659c18f4c5342663e36aac49c4886da86/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.1.1_9d4b1c7b02215d03556b436eff863e6bffc1070d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.1.1_619aaf02eccb03210f1f5c5f1e8acb3338f6adc4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="eaedc4d9db155dbed544680cfe197292c347b731">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_24f755715d930430ebf82b211bd42db25563b12b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="7e71e5b08da6e6b563870fdb5e13e458b9affe9c">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_d100c6ef50a081d370f38ed9a97c0e1afe1d399c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/pascal/Downloads/Android Studio 2.app/Contents/gradle/m2repository/commons-io/commons-io/2.4/commons-io-2.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="/Users/pascal/Documents/Android/TraveLLog/app/build/intermediates/transforms/dex/debug/folders/1000/10/commons-io-2.4_80e882ff598a505a6a141df630d7001bc3dbf9ce/classes.dex" />
+    </item>
+
+</items>
